@@ -20,3 +20,5 @@ https://share.streamlit.io/
 
 1. stream_test1.py : A test app
 2. stream_test_model.py : A test model upload
+
+I can view all my apps by going to the website https://share.streamlit.io/ and logging into my user name and password
