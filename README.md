@@ -1,2 +1,22 @@
-# streamlit_deploy
+# Deploy Apps using Streamlit
+
 Repository to test the deployment of streamlit apps
+
+Use the below link to deploy apps using streamlit : 
+
+[Streamlit documentation](https://docs.streamlit.io/en/stable/getting_started.html)
+
+To run a python script as an app, use the below command : 
+`streamlit run stream_test1.py`
+
+## Deploy streamlit app 
+
+Use the below documentation to deploy streamlit apps using 
+https://share.streamlit.io/
+
+[Deploy using Streamlit](https://docs.streamlit.io/en/stable/deploy_streamlit_app.html)
+
+## Streamlit apps present in thie repo : 
+
+1. stream_test1.py : A test app
+2. stream_test_model.py : A test model upload
