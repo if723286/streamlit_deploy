@@ -18,7 +18,11 @@ https://share.streamlit.io/
 
 ## Streamlit apps present in thie repo : 
 
-1. stream_test1.py : A test app
-2. stream_test_model.py : A test model upload
+1. stream_test1.py : A test app . [Link](https://share.streamlit.io/abinavrameshs/streamlit_deploy/main/stream_test1.py)
+2. stream_test_model.py : A test model upload. [Link](https://share.streamlit.io/abinavrameshs/streamlit_deploy/main/stream_test_model.py)
 
 I can view all my apps by going to the website https://share.streamlit.io/ and logging into my user name and password
+
+# Other useful links about Streamlit
+
+[Streamlit Cheatsheet](https://share.streamlit.io/daniellewisdl/streamlit-cheat-sheet/app.py)
