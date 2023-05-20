@@ -38,6 +38,14 @@ if st.button("Calcular"):
     tabla_amortizacion = calcular_tabla_amortizacion(monto_prestamo, periodos, tasa_interes)
     mostrar_tabla_amortizacion(tabla_amortizacion)
 
+    # Resumen de la tabla de amortización
+    total_intereses = sum(row[3] for row in tabla_amortizacion)
+    total_pagos = sum(row[1] for row in tabla_amortizacion)
+    st.info(f"**Total de intereses pagados:** ${total_intereses:,.2f}")
+    st.info(f"**Total de pagos realizados:** ${total_pagos:,.2f}")
+
+
+
 
 
 
