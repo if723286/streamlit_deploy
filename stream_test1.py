@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 def calcular_tabla_amortizacion(monto_prestamo, periodos, tasa_interes):
-    tasa_interes_mensual = tasa_interes / 100 / 12
+    tasa_interes_mensual = tasa_interes / 100 
     pago_mensual = monto_prestamo * (tasa_interes_mensual / (1 - (1 + tasa_interes_mensual) ** -periodos))
     
     saldo_restante = monto_prestamo
@@ -29,7 +29,7 @@ def mostrar_tabla_amortizacion(tabla_amortizacion):
 st.title("Calculadora de Amortización de Préstamos")
 
 monto_prestamo = st.slider("Seleccione el monto del préstamo:", min_value=0, max_value=10_000, step=100, value=1000, format="$%d")
-periodos = st.slider("Seleccione el número de períodos:", min_value=1, max_value=60, step=1, value=6, key="periodos_slider")
+periodos = st.slider("Duración de préstamo (en meses):", min_value=1, max_value=60, step=1, value=6, key="periodos_slider")
 tasa_interes = st.slider("Seleccione la tasa de interés:", min_value=0.0, max_value=20.0, step=0.1, value=7.0, format="%f%%", key="tasa_slider")
 
 st.write('---')
