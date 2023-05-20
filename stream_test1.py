@@ -29,8 +29,8 @@ def mostrar_tabla_amortizacion(tabla_amortizacion):
 st.title("Calculadora de Amortización de Préstamos")
 
 monto_prestamo = st.slider("Seleccione el monto del préstamo:", min_value=0, max_value=10_000, step=100, value=1000, format="$%d")
-periodos = st.slider("Duración de préstamo (en meses):", min_value=1, max_value=60, step=1, value=6, key="periodos_slider")
-tasa_interes = st.slider("Seleccione la tasa de interés:", min_value=0.0, max_value=20.0, step=0.1, value=7.0, format="%f%%", key="tasa_slider")
+periodos = st.slider("Seleccione Duración de préstamo (en meses):", min_value=1, max_value=12, step=1, value=6, key="periodos_slider")
+tasa_interes = st.slider("Seleccione la tasa de interés:", min_value=0.0, max_value=15.0, step=0.1, value=7.0, format="%f%%", key="tasa_slider")
 
 st.write('---')
 
