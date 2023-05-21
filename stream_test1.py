@@ -26,7 +26,7 @@ def mostrar_tabla_amortizacion(tabla_amortizacion):
     st.table(df)
 
 # Aplicación de Streamlit
-st.title("Calculadora de Amortización de Préstamos")
+st.title("Calculadora de Préstamos")
 
 monto_prestamo = st.slider("Seleccione el monto del préstamo:", min_value=0, max_value=10_000, step=100, value=1000, format="$%d")
 periodos = st.slider("Seleccione Duración de préstamo (en meses):", min_value=1, max_value=12, step=1, value=6, key="periodos_slider")
