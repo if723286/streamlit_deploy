@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import random
+import urllib.parse
 
 def asignar_tasa_interes(monto_prestamo, periodos, primera_vez):
     if primera_vez:
@@ -37,8 +38,6 @@ def asignar_tasa_interes(monto_prestamo, periodos, primera_vez):
 
 
 def calcular_tabla_amortizacion(monto_prestamo, periodos, primera_vez):
-    if primera_vez:
-        monto_prestamo = 1000
     tasa_interes = asignar_tasa_interes(monto_prestamo, periodos, primera_vez)
     tasa_interes_mensual = tasa_interes / 100 
     pago_mensual = monto_prestamo * (tasa_interes_mensual / (1 - (1 + tasa_interes_mensual) ** -periodos))
@@ -63,6 +62,21 @@ def mostrar_tabla_amortizacion(tabla_amortizacion):
     df["Saldo"] = df["Saldo"].map("${:,.2f}".format)
     st.table(df)
 
+
+def enviar_por_correo(monto_prestamo, tasa_interes, total_intereses, total_pagos):
+    email = "admon@moonetaes.com"
+    subject = "Información de préstamo"
+    body = f"Aquí está la información de mi préstamo:\n" \
+           f" \n" \
+           f"Monto de préstamo: ${monto_prestamo:,.2f}\n" \
+           f"Tasa de interés asignada: {tasa_interes:.2f}%\n" \
+           f"Total de intereses pagados: ${total_intereses:,.2f}\n" \
+           f"Total de pagos realizados: ${total_pagos:,.2f}"
+
+    mailto_url = f"mailto:{email}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
+    st.write(f"Esta es solo una simulacion del prestamo que podrias obtener. Para obtener más información haz clic en el siguiente enlace:")
+    st.write(f"[Enviar información por correo electrónico]({mailto_url})")
+
 # Aplicación de Streamlit
 st.title("Calculadora de Préstamos")
 
@@ -73,7 +87,7 @@ primera_vez = st.radio("¿Es la primera vez que solicita un préstamo a Moonetae
 st.write('---')
 
 if st.button("Calcular"):
-    if primera_vez:
+    if primera_vez and monto_prestamo > 1000:
         st.write("Esta vez podemos prestarte hasta $1,000 pesos por ser la primera vez que solicitas un préstamo con nosotros")
         st.write("Aqui esta tu tabla de pagos. ¡Se puntual con todos los pagos y podrías obtener un monto de credito mayor la próxima vez!")
         monto_prestamo = 1000
@@ -87,6 +101,12 @@ if st.button("Calcular"):
     st.info(f"**Tasa de interés asignada:** {tasa_interes:.2f}%")
     st.info(f"**Total de intereses pagados:** ${total_intereses:,.2f}")
     st.info(f"**Total de pagos realizados:** ${total_pagos:,.2f}")
+
+    enviar_por_correo(monto_prestamo, tasa_interes, total_intereses, total_pagos)
+
+
+
+    
 
 
 
