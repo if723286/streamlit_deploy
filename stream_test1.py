@@ -87,9 +87,9 @@ def enviar_por_correo(monto_prestamo, tasa_interes, total_intereses, total_pagos
     st.write(f"[Enviar información por correo electrónico]({mailto_url})")
 
 # Aplicación de Streamlit
-st.title("Calculadora de Préstamos")
+st.title("Simulador de Préstamo")
 
-fecha_inicio = st.date_input("Fecha de inicio del préstamo", value=(datetime.date.today() + datetime.timedelta(days=30)))
+fecha_inicio = st.date_input("Seleccione la fecha en la que desea adquirir el préstamo", value=(datetime.date.today() + datetime.timedelta(days=30)))
 monto_prestamo = st.slider("Seleccione el monto del préstamo:", min_value=0, max_value=10_000, step=100, value=1000, format="$%d")
 periodos = st.slider("Seleccione Duración de préstamo (en meses):", min_value=1, max_value=12, step=1, value=6, key="periodos_slider")
 primera_vez = st.radio("¿Es la primera vez que solicita un préstamo a Moonetaes?", ("Sí", "No")) == "Sí"
