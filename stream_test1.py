@@ -25,7 +25,7 @@ def asignar_tasa_interes(monto_prestamo, periodos, primera_vez):
         elif monto_prestamo <= 6000 and periodos <= 6:
             return random.uniform(5.5, 5.7)
         elif monto_prestamo <= 6000 and periodos <= 12:
-            return random.uniform(5.8, 6)
+            return random.uniform(5.8, 6.0)
         # Monto de 8,000
         elif monto_prestamo <= 8000 and periodos <= 6:
             return random.uniform(5.0, 5.2)
@@ -61,12 +61,12 @@ def calcular_tabla_amortizacion(monto_prestamo, periodos, primera_vez):
 
 
 def mostrar_tabla_amortizacion(tabla_amortizacion, fecha_inicio):
-    df = pd.DataFrame(tabla_amortizacion, columns=["Número de Pago", "Fecha de Pago", "Monto", "Principal", "Interés", "Saldo"])
+    df = pd.DataFrame(tabla_amortizacion, columns=["Número de Pago", "Fecha de Pago", "Principal", "Interés", "Monto", "Saldo"])
     df["Fecha de Pago"] = pd.date_range(start=fecha_inicio, periods=len(df), freq="M")
     df["Fecha de Pago"] = df["Fecha de Pago"].dt.strftime("%Y-%m-%d")
-    df["Monto"] = df["Monto"].map("${:,.2f}".format)
     df["Principal"] = df["Principal"].map("${:,.2f}".format)
     df["Interés"] = df["Interés"].map("${:,.2f}".format)
+    df["Monto"] = df["Monto"].map("${:,.2f}".format)
     df["Saldo"] = df["Saldo"].map("${:,.2f}".format)
     df = df.reset_index(drop=True)  # Reiniciar el índice y convertirlo en una columna regular
     st.table(df)
@@ -101,18 +101,25 @@ if st.button("Calcular"):
         st.write("Esta vez podemos prestarte hasta $1,000 pesos por ser la primera vez que solicitas un préstamo con nosotros")
         st.write("Aquí está tu tabla de pagos. ¡Sé puntual con todos los pagos y podrías obtener un monto de crédito mayor la próxima vez!")
         monto_prestamo = 1000
+    
     tabla_amortizacion, tasa_interes = calcular_tabla_amortizacion(monto_prestamo, periodos, primera_vez)
+
+    # Modificación de la columna "Monto" para mostrar el pago total (principal + interés)
+    tabla_amortizacion = [(i, fecha_pago, pago_principal, pago_interes, pago_principal + pago_interes, saldo_restante) for
+                          i, fecha_pago, _, pago_principal, pago_interes, saldo_restante in tabla_amortizacion]
+
     mostrar_tabla_amortizacion(tabla_amortizacion, fecha_inicio)
 
     # Resumen de la tabla de amortización
-    total_intereses = sum(row[4] for row in tabla_amortizacion)
-    total_pagos = sum(row[3] + row[4] for row in tabla_amortizacion)
+    total_intereses = sum(row[3] for row in tabla_amortizacion)
+    total_pagos = sum(row[4] for row in tabla_amortizacion)
     st.info(f"**Monto de préstamo:** ${monto_prestamo:,.2f}")
     st.info(f"**Tasa de interés asignada:** {tasa_interes:.2f}%")
     st.info(f"**Total de intereses pagados:** ${total_intereses:,.2f}")
     st.info(f"**Total de pagos realizados:** ${total_pagos:,.2f}")
 
     enviar_por_correo(monto_prestamo, tasa_interes, total_intereses, total_pagos)
+
 
 
 
