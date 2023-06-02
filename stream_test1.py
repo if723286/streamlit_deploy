@@ -61,13 +61,13 @@ def calcular_tabla_amortizacion(monto_prestamo, periodos, primera_vez):
 
 
 def mostrar_tabla_amortizacion(tabla_amortizacion, fecha_inicio):
-    df = pd.DataFrame(tabla_amortizacion, columns=["Número de Pago", "Fecha de Pago", "Principal", "Interés", "Monto", "Saldo"])
+    df = pd.DataFrame(tabla_amortizacion, columns=["Número de Pago", "Fecha de Pago", "Principal", "Interés", "Pago total", "Saldo restante"])
     df["Fecha de Pago"] = pd.date_range(start=fecha_inicio, periods=len(df), freq="M")
     df["Fecha de Pago"] = df["Fecha de Pago"].dt.strftime("%Y-%m-%d")
     df["Principal"] = df["Principal"].map("${:,.2f}".format)
     df["Interés"] = df["Interés"].map("${:,.2f}".format)
-    df["Monto"] = df["Monto"].map("${:,.2f}".format)
-    df["Saldo"] = df["Saldo"].map("${:,.2f}".format)
+    df["Pago total"] = df["Pago total"].map("${:,.2f}".format)
+    df["Saldo restante"] = df["Saldo restante"].map("${:,.2f}".format)
     df = df.reset_index(drop=True)  # Reiniciar el índice y convertirlo en una columna regular
     st.table(df)
 
