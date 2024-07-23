@@ -1,135 +1,121 @@
 import streamlit as st
+import pandas as pd
+import random
+import urllib.parse
+import datetime
 
-def calcular_salario(tipo_unidad, vueltas, descanso_dia, descansa_domingo, bono_productividad, rendimiento_combustible, horas_trabajo):
-    # Sueldo base según el tipo de unidad
-    sueldo_base = {
-        "Carro": 1760,
-        'Camioneta': 1980,
-        'Sprinter': 2200,
-        'Camion': 2420
-    }[tipo_unidad]
-
-    # Restar 18 vueltas y aplicar costo por vueltas extra
-    vueltas_extra = max(vueltas - 18, 0)
-    pago_vuelta_extra = {
-        "Carro": 73,
-        'Camioneta': 85,
-        'Sprinter': 97,
-        'Camion': 124
-    }[tipo_unidad] * vueltas_extra
-
-    # Pago por descanso en día de descanso
-    pago_descanso_laborado = sueldo_base / 7 * 2 if not descanso_dia else 0
-    descanso = 220 if descanso_dia else 0
-
-    # Pago por trabajar el domingo
-    pago_domingo = sueldo_base / 7 * 0.25 if not descansa_domingo else 0
-
-    # Pago por bono de productividad
-    pago_bono_productividad = 200 if bono_productividad else 0
-
-    # Pago por rendimiento de combustible
-    pago_rendimiento_combustible = {
-        'Bajo': 100,
-        'Medio': 150,
-        'Bueno': 200
-    }[rendimiento_combustible]
-
-    # Pago por horas de trabajo
-    if 45 < horas_trabajo <= 54:
-        pago_horas_trabajo = sueldo_base / 7 / 7.5 * 2 * (horas_trabajo - 45)
-    elif horas_trabajo > 54:
-        horas_extra_doble = min(9, horas_trabajo - 45)  # Máximo 9 horas dobles
-        horas_extra_triple = max(horas_trabajo - 54, 0)  # Resto son triples
-        pago_horas_trabajo = sueldo_base / 7 / 7.5 * (2 * horas_extra_doble + 3 * horas_extra_triple)
+def asignar_tasa_interes(monto_prestamo, periodos, primera_vez):
+    if primera_vez:
+        if periodos <= 6:
+            return random.uniform(7.0, 7.6)
+        else:
+            return random.uniform(7.7, 8.3)
     else:
-        pago_horas_trabajo = 0
-
-    # Pago por tiempo laborando en TESA
-    bono_lealtad = 0
-    if vueltas > 11:
-        bono_lealtad= 435
-    else:
-        pago_horas_trabajo = 200
-
-    #Mondero electronico
-        
-    monedero = 100
-
-    # Total del salario
-    salario_total = (
-        sueldo_base +
-        pago_vuelta_extra +
-        pago_descanso_laborado +
-        descanso +
-        pago_domingo +
-        pago_bono_productividad +
-        pago_rendimiento_combustible +
-        pago_horas_trabajo +
-        bono_lealtad +
-        monedero
-    )
-
-    # Detalles del salario para la tabla
-    detalles_salario = {
-        "Concepto": ["Sueldo base", "Tiempo extra", "Vueltas extra", "Descanso laborado", "Prima dominical (si trabajo en domingo)",
-                     "Bono lealtad", "Bono descanso (si descanso el día de su descanso)", "Bono productividad",
-                     "Bono rendimiento", "Monedero electrónico"],
-        "Cantidad $": [f"${'{:,.2f}'.format(sueldo_base)}", f"${'{:,.2f}'.format(pago_horas_trabajo)}",
-                       f"${'{:,.2f}'.format(pago_vuelta_extra)}", f"${'{:,.2f}'.format(pago_descanso_laborado)}",
-                       f"${'{:,.2f}'.format(pago_domingo)}", f"${'{:,.2f}'.format(bono_lealtad)}",
-                       f"${'{:,.2f}'.format(descanso)}", f"${'{:,.2f}'.format(pago_bono_productividad)}",
-                       f"${'{:,.2f}'.format(pago_rendimiento_combustible)}", f"${'{:,.2f}'.format(monedero)}"]
-    }
-
-    return salario_total, detalles_salario
-
-def main():
-    st.title("Calculadora de Salario para Choferes de TESA")
-
-    tipo_unidad = st.selectbox("Selecciona el tipo de unidad que manejas", ["Camioneta", "Sprinter", "Camion", "Carro"])
-
-    vueltas_extra = st.number_input("¿Cuántas vueltas hiciste?", min_value=0, value=18)
-
-    horas_trabajo = st.number_input("¿Cuántas horas trabajaste?", min_value=0, value=45)
-
-    descanso_dia = st.selectbox("¿Descansaste en tu día de descanso?", options=["Sí", "No"])
-
-    descansa_domingo = st.selectbox("¿Descansaste el domingo?", options=["Sí", "No"])
-
-    bono_productividad = st.selectbox("¿Ganaste bono de productividad?", options=["Sí", "No"])
+        # Monto de 2,000
+        if monto_prestamo <= 200 and periodos <= 6:
+            return random.uniform(6.5, 6.7)
+        elif monto_prestamo <= 200 and periodos <= 12:
+            return random.uniform(6.8, 7.0)
+        # Monto de 4,000
+        elif monto_prestamo <= 400 and periodos <= 6:
+            return random.uniform(6.0, 6.2)
+        elif monto_prestamo <= 400 and periodos <= 12:
+            return random.uniform(6.3, 6.5)
+        # Monto de 6,000
+        elif monto_prestamo <= 600 and periodos <= 6:
+            return random.uniform(5.5, 5.7)
+        elif monto_prestamo <= 600 and periodos <= 12:
+            return random.uniform(5.8, 6.0)
+        # Monto de 8,000
+        elif monto_prestamo <= 800 and periodos <= 6:
+            return random.uniform(5.0, 5.2)
+        elif monto_prestamo <= 800 and periodos <= 12:
+            return random.uniform(5.3, 5.5)
+        # Monto de 10,000
+        elif monto_prestamo <= 1000 and periodos <= 6:
+            return random.uniform(4.5, 4.7)
+        else:
+            return random.uniform(4.7, 5)
 
 
+def calcular_tabla_amortizacion(monto_prestamo, periodos, primera_vez):
+    tasa_interes = asignar_tasa_interes(monto_prestamo, periodos, primera_vez)
+    tasa_interes_mensual = tasa_interes / 100
+    pago_mensual = monto_prestamo * (tasa_interes_mensual / (1 - (1 + tasa_interes_mensual) ** -periodos))
 
-    rendimiento_combustible = st.selectbox("Selecciona tu rendimiento de combustible", ["Bueno", "Bajo", "Medio"])
+    fecha_actual = datetime.date.today()
+    fecha_inicio = fecha_actual + datetime.timedelta(days=30)  # Agrega un mes
+
+    saldo_restante = monto_prestamo
+    tabla_amortizacion = []
+
+    for i in range(1, periodos + 1):
+        pago_interes = saldo_restante * tasa_interes_mensual
+        pago_principal = pago_mensual - pago_interes
+        saldo_restante -= pago_principal
+
+        fecha_pago = fecha_inicio + datetime.timedelta(days=(i - 1) * 30)  # Agrega 30 días por cada período
+        tabla_amortizacion.append((i, fecha_pago, monto_prestamo, pago_principal, pago_interes, saldo_restante))
+
+    return tabla_amortizacion, tasa_interes
 
 
+def mostrar_tabla_amortizacion(tabla_amortizacion, fecha_inicio):
+    df = pd.DataFrame(tabla_amortizacion, columns=["Número de Pago", "Fecha de Pago", "Principal", "Interés", "Pago total", "Saldo restante"])
+    df["Fecha de Pago"] = pd.date_range(start=fecha_inicio, periods=len(df), freq="M")
+    df["Fecha de Pago"] = df["Fecha de Pago"].dt.strftime("%Y-%m-%d")
+    df["Principal"] = df["Principal"].map("${:,.2f}".format)
+    df["Interés"] = df["Interés"].map("${:,.2f}".format)
+    df["Pago total"] = df["Pago total"].map("${:,.2f}".format)
+    df["Saldo restante"] = df["Saldo restante"].map("${:,.2f}".format)
+    df = df.reset_index(drop=True)  # Reiniciar el índice y convertirlo en una columna regular
+    st.table(df)
 
-    if st.button("Calcular Salario"):
-        salario_calculado, detalles_salario = calcular_salario(tipo_unidad, vueltas_extra, descanso_dia, descansa_domingo, bono_productividad, rendimiento_combustible, horas_trabajo)
-        
-        
 
-        # Mostrar tabla con detalles del salario
-        st.subheader("Detalles del Salario")
-        st.table(detalles_salario)
-        st.success(f"Tu salario calculado es: ${'{:,.2f}'.format(salario_calculado)}")
+def enviar_por_correo(monto_prestamo, tasa_interes, total_intereses, total_pagos):
+    email = "admon@moonetaes.com"
+    subject = "Información de préstamo"
+    body = f"Aquí está la información de mi préstamo:\n" \
+           f" \n" \
+           f"Monto de préstamo: ${monto_prestamo:,.2f}\n" \
+           f"Tasa de interés asignada: {tasa_interes:.2f}%\n" \
+           f"Total de intereses pagados: ${total_intereses:,.2f}\n" \
+           f"Total de pagos realizados: ${total_pagos:,.2f}"
 
-        # Nota sobre reducciones de ISR e IMSS
-        st.warning("Recuerda que este es tu salario nominal. Aquí no están calculadas las reducciones de ISR e IMSS.")
+    mailto_url = f"mailto:{email}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
+    st.write(f"Esta es solo una simulación del préstamo que podrías obtener. Para obtener más información, haz clic en el siguiente enlace:")
+    st.write(f"[Enviar información por correo electrónico]({mailto_url})")
 
-        # Mensaje adicional con número de comunicación y horarios
-        st.markdown("""
-        ## ¿Tienes dudas?
-        Si tienes alguna pregunta, no dudes en comunicarte con nosotros al número de atención:
-        - 📞 3337320671 o 3337322424 ext 106
+# Aplicación de Streamlit
+st.title("Simulador de Préstamo")
 
-        Horarios de atención:
-        - Viernes, sábado y lunes siguientes al depósito: 8:30 - 14:00 y 17:30 - 20:00 0
-        """)
+fecha_inicio = st.date_input("Seleccione la fecha en la que desea adquirir el préstamo", value=(datetime.date.today() + datetime.timedelta(days=30)))
+monto_prestamo = st.slider("Seleccione el monto del préstamo:", min_value=0, max_value=1_000, step=10, value=500, format="$%d")
+periodos = st.slider("Seleccione Duración de préstamo (en meses):", min_value=1, max_value=12, step=1, value=6, key="periodos_slider")
+primera_vez = st.radio("¿Es la primera vez que solicita un préstamo a Moonetaes?", ("Sí", "No")) == "Sí"
 
-        
+st.write('---')
 
-if __name__ == "__main__":
-    main()
+if st.button("Calcular"):
+    if primera_vez and monto_prestamo > 1000:
+        st.write("Esta vez podemos prestarte hasta $1,000 pesos por ser la primera vez que solicitas un préstamo con nosotros")
+        st.write("Aquí está tu tabla de pagos. ¡Sé puntual con todos los pagos y podrías obtener un monto de crédito mayor la próxima vez!")
+        monto_prestamo = 1000
+    
+    tabla_amortizacion, tasa_interes = calcular_tabla_amortizacion(monto_prestamo, periodos, primera_vez)
 
+    # Modificación de la columna "Monto" para mostrar el pago total (principal + interés)
+    tabla_amortizacion = [(i, fecha_pago, pago_principal, pago_interes, pago_principal + pago_interes, saldo_restante) for
+                          i, fecha_pago, _, pago_principal, pago_interes, saldo_restante in tabla_amortizacion]
+
+    mostrar_tabla_amortizacion(tabla_amortizacion, fecha_inicio)
+
+    # Resumen de la tabla de amortización
+    total_intereses = sum(row[3] for row in tabla_amortizacion)
+    total_pagos = sum(row[4] for row in tabla_amortizacion)
+    st.info(f"**Monto de préstamo:** ${monto_prestamo:,.2f}")
+    st.info(f"**Tasa de interés mensual:** {tasa_interes:.2f}%")
+    st.info(f"**Total de intereses pagados:** ${total_intereses:,.2f}")
+    st.info(f"**Total de pagos realizados:** ${total_pagos:,.2f}")
+
+    enviar_por_correo(monto_prestamo, tasa_interes, total_intereses, total_pagos)
